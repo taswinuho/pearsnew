@@ -49,19 +49,26 @@ export default function Footer() {
             <div className="md:col-span-3 text-center order-2 md:order-1 md:pl-8 flex flex-col justify-center h-full">
               <h4 className="font-black text-xs uppercase mb-6 text-white/40 tracking-[0.2em]">NAVIGATE</h4>
               <ul className="space-y-2">
-                {["HOME", "EVENTS", "RANKINGS", "GALLERY"].map((item) => (
-                  <li className="leading-5" key={item}>
+                {[
+                  { name: "HOME", href: "/" },
+                  { name: "EVENTS", href: "/events" },
+                  { name: "RANKINGS", href: "/rankings" },
+                  { name: "GALLERY", href: "/gallery" },
+                  { name: "ABOUT", href: "/about" },
+                  { name: "CONTACT", href: "/contact" },
+                ].map((item) => (
+                  <li className="leading-5" key={item.name}>
                     <a
-                      href={`#${item.toLowerCase().replace(" ", "-")}`}
+                      href={item.href}
                       className="text-white font-bold text-xl md:text-2xl uppercase hover:text-[#ff5722] transition-colors inline-block leading-4"
                     >
-                      {item}
+                      {item.name}
                     </a>
                   </li>
                 ))}
                 <li>
                   <a
-                    href="#register"
+                    href="/register"
                     className="text-[#ff5722] font-black text-xl md:text-2xl uppercase hover:text-white transition-colors inline-block"
                   >
                     REGISTER
