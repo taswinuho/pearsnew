@@ -80,6 +80,13 @@ export default function Helmet3DModel({ modelPath }: Helmet3DModelProps) {
 }
 
 // Preload do modelo com error handling
-useGLTF.preload("/3d/helmet-lorenzo.glb").catch(() => {
-  console.warn("[v0] Failed to preload 3D helmet model")
-})
+try {
+  const preloadPromise = useGLTF.preload("/3d/helmet-lorenzo.glb")
+  if (preloadPromise && typeof preloadPromise.catch === "function") {
+    preloadPromise.catch(() => {
+      console.warn("[v0] Failed to preload 3D helmet model")
+    })
+  }
+} catch (error) {
+  console.warn("[v0] Error preloading 3D helmet model:", error)
+}
