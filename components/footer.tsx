@@ -1,28 +1,7 @@
 "use client"
 
-import { Suspense } from "react"
-import { Canvas } from "@react-three/fiber"
-import { Environment, PerspectiveCamera } from "@react-three/drei"
 import { motion } from "framer-motion"
-import Helmet3DModel from "./helmet-3d-model"
 import InfiniteLogoSlider from "./infinite-logo-slider"
-
-function LoadingFallback() {
-  return (
-    <mesh>
-      <sphereGeometry args={[1.5, 16, 16]} />
-      <meshStandardMaterial color="#0a1628" wireframe />
-    </mesh>
-  )
-}
-
-function ErrorFallback() {
-  return (
-    <div className="w-full h-full flex items-center justify-center text-white">
-      <p className="text-center">3D Model Loading</p>
-    </div>
-  )
-}
 
 export default function Footer() {
   return (
@@ -61,7 +40,8 @@ export default function Footer() {
                   { name: "HOME", href: "/" },
                   { name: "EVENTS", href: "/events" },
                   { name: "RANKINGS", href: "/rankings" },
-                  { name: "GALLERY", href: "/gallery" },
+                  { name: "BLOG", href: "/blog" },
+                  { name: "FEATURES", href: "/features" },
                   { name: "ABOUT", href: "/about" },
                   { name: "CONTACT", href: "/contact" },
                 ].map((item) => (
@@ -103,17 +83,17 @@ export default function Footer() {
                 </motion.h2>
               </div>
 
-              <div className="relative w-full h-[300px] md:h-[500px] z-10 mt-24 md:mt-24">
-                <Canvas onError={(error) => console.warn("[v0] Canvas error:", error)}>
-                  <PerspectiveCamera makeDefault position={[0, 0, 6.5]} />
-                  <ambientLight intensity={0.8} />
-                  <directionalLight position={[10, 10, 5]} intensity={1.5} />
-                  <pointLight position={[-10, -10, -5]} intensity={0.8} color="#ff5722" />
-                  <Suspense fallback={<LoadingFallback />}>
-                    <Helmet3DModel modelPath="/3d/helmet-lorenzo.glb" />
-                  </Suspense>
-                  <Environment preset="city" />
-                </Canvas>
+              <div className="relative w-full h-[300px] md:h-[500px] z-10 mt-24 md:mt-24 flex items-center justify-center bg-gradient-to-b from-[#1a2535] to-[#0a1628] rounded-lg overflow-hidden">
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.6 }}
+                  className="text-center"
+                >
+                  <div className="text-6xl mb-4">🏍️</div>
+                  <h3 className="text-2xl font-bold text-white mb-2">PEARS 3D Showcase</h3>
+                  <p className="text-white/60">Premium Pushbike Racing Equipment</p>
+                </motion.div>
               </div>
 
               <motion.button

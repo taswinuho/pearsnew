@@ -88,7 +88,8 @@ export default function Header() {
     { name: "HOME", href: "/" },
     { name: "EVENTS", href: "/events" },
     { name: "RANKINGS", href: "/rankings" },
-    { name: "GALLERY", href: "/gallery" },
+    { name: "BLOG", href: "/blog" },
+    { name: "FEATURES", href: "/features" },
     { name: "ABOUT", href: "/about" },
     { name: "CONTACT", href: "/contact" },
     { name: "REGISTER", href: "/register" },
@@ -122,7 +123,7 @@ export default function Header() {
           </motion.div>
 
           <nav className="hidden xl:flex items-center gap-6">
-            {navItems.slice(0, 6).map((item) => (
+            {navItems.slice(0, 7).map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
