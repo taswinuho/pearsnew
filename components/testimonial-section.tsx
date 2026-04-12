@@ -8,7 +8,7 @@ export default function TestimonialSection() {
     <section className="relative min-h-screen bg-[#0a1628] overflow-hidden flex items-center">
       <div className="absolute inset-0 z-0">
         <Image
-          src="/kids-pushbike-race-track-outdoor-sunny-day.jpg"
+          src="/images/kids-pushbike-race-track-outdoor-sunny-day.jpg"
           alt="PEARS racing background"
           fill
           className="object-cover opacity-20"
@@ -67,7 +67,7 @@ export default function TestimonialSection() {
 
           <div className="order-1 lg:order-2 w-full aspect-[4/5] md:aspect-square relative max-w-lg mx-auto lg:mx-0">
             <Image
-              src="/happy-child-on-balance-bike-with-helmet-smiling.jpg"
+              src="/images/happy-child-on-balance-bike-with-helmet-smiling.jpg"
               alt="Young PEARS rider"
               fill
               className="object-cover object-center rounded-3xl opacity-80"

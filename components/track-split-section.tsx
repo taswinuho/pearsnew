@@ -16,7 +16,7 @@ export default function TrackSplitSection() {
           className="relative group overflow-hidden cursor-pointer"
         >
           <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.7 }} className="absolute inset-0">
-            <Image src="/kids-pushbike-race-event-starting-line.jpg" alt="Race Events" fill className="object-cover" />
+            <Image src="/images/kids-pushbike-race-event-starting-line.jpg" alt="Race Events" fill className="object-cover" />
           </motion.div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628]/90 via-[#0a1628]/40 to-transparent z-10" />
 
@@ -53,7 +53,7 @@ export default function TrackSplitSection() {
           className="relative group overflow-hidden cursor-pointer"
         >
           <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.7 }} className="absolute inset-0">
-            <Image src="/kids-pushbike-trophy-ceremony-award.jpg" alt="Rankings" fill className="object-cover" />
+            <Image src="/images/kids-pushbike-trophy-ceremony-award.jpg" alt="Rankings" fill className="object-cover" />
           </motion.div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628]/90 via-[#0a1628]/40 to-transparent z-10" />
 

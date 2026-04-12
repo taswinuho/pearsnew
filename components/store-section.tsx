@@ -67,7 +67,7 @@ export default function StoreSection() {
             viewport={{ once: true }}
             className="relative h-[600px] rounded-3xl overflow-hidden"
           >
-            <Image src="/kids-pushbike-racing-champion-celebration-podium.jpg" alt="PEARS Champions" fill className="object-cover" />
+            <Image src="/images/kids-pushbike-racing-champion-celebration-podium.jpg" alt="PEARS Champions" fill className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628]/80 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6 right-6">
               <p className="text-white font-black text-2xl">Future Champions</p>

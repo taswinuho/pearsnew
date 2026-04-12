@@ -64,7 +64,7 @@ export function OurMission() {
           >
             <div className="aspect-square bg-[#0a1628] rounded-3xl overflow-hidden">
               <img
-                src="/happy-kids-on-balance-bikes-at-a-race-event-sunny-.jpg"
+                src="/images/happy-kids-on-balance-bikes-at-a-race-event-sunny-.jpg"
                 alt="Kids at PEARS racing event"
                 className="w-full h-full object-cover opacity-80"
               />
