@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, Suspense } from "react"
 import { useFrame } from "@react-three/fiber"
 import { useGLTF } from "@react-three/drei"
 import * as THREE from "three"
@@ -11,7 +11,17 @@ interface Helmet3DModelProps {
 
 export default function Helmet3DModel({ modelPath }: Helmet3DModelProps) {
   const groupRef = useRef<THREE.Group>(null)
-  const { scene } = useGLTF(modelPath)
+  const [loadError, setLoadError] = useState(false)
+  
+  let scene: THREE.Group | null = null
+  
+  try {
+    const gltf = useGLTF(modelPath)
+    scene = gltf.scene
+  } catch (error) {
+    console.warn("[v0] Failed to load 3D helmet model:", error)
+    setLoadError(true)
+  }
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const targetRotation = useRef({ x: 0, y: 0 })
@@ -58,6 +68,10 @@ export default function Helmet3DModel({ modelPath }: Helmet3DModelProps) {
     }
   })
 
+  if (loadError || !scene) {
+    return <group ref={groupRef} />
+  }
+
   return (
     <group ref={groupRef}>
       <primitive object={scene} scale={2.5} />
@@ -65,5 +79,7 @@ export default function Helmet3DModel({ modelPath }: Helmet3DModelProps) {
   )
 }
 
-// Preload do modelo
-useGLTF.preload("/3d/helmet-lorenzo.glb")
+// Preload do modelo com error handling
+useGLTF.preload("/3d/helmet-lorenzo.glb").catch(() => {
+  console.warn("[v0] Failed to preload 3D helmet model")
+})

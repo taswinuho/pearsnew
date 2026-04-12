@@ -16,6 +16,14 @@ function LoadingFallback() {
   )
 }
 
+function ErrorFallback() {
+  return (
+    <div className="w-full h-full flex items-center justify-center text-white">
+      <p className="text-center">3D Model Loading</p>
+    </div>
+  )
+}
+
 export default function Footer() {
   return (
     <footer className="bg-[#ff5722] pt-0 px-4 md:px-8 min-h-screen flex flex-col justify-end relative pb-5">
@@ -96,7 +104,7 @@ export default function Footer() {
               </div>
 
               <div className="relative w-full h-[300px] md:h-[500px] z-10 mt-24 md:mt-24">
-                <Canvas>
+                <Canvas onError={(error) => console.warn("[v0] Canvas error:", error)}>
                   <PerspectiveCamera makeDefault position={[0, 0, 6.5]} />
                   <ambientLight intensity={0.8} />
                   <directionalLight position={[10, 10, 5]} intensity={1.5} />
