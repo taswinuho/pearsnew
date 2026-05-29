@@ -3,20 +3,12 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
-import Image from "next/image"
 
-// --- AQUI É O SEGREDO DA MÁSCARA SVG ---
-// Você tem duas opções:
-// 1. Usar uma imagem da pasta public: `url('/images/minha-forma.svg')`
-// 2. Usar o SVG direto aqui (Data URI) como fiz abaixo.
-
-// Este é um exemplo de uma mancha de tinta/lama vetorial.
-// Se você tiver o SEU código SVG, você pode salvar um arquivo .svg na pasta public
-// e mudar essa linha para: const SVG_MASK = "url('/seu-arquivo.svg')"
 const SVG_MASK = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 250' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='10' y='10' width='180' height='230' rx='20' ry='20' fill='%23000'/%3E%3C/svg%3E")`
 
 export function InteractiveClean() {
   const [isHovered, setIsHovered] = useState(false)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const displayCanvasRef = useRef<HTMLCanvasElement>(null)
   const maskCanvasRef = useRef<HTMLCanvasElement>(null)
@@ -27,24 +19,32 @@ export function InteractiveClean() {
   const lastMousePos = useRef<{ x: number; y: number } | null>(null)
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
 
-  // Ajuste o tamanho do pincel conforme a sua forma
   const BRUSH_SIZE = 120
   const BRUSH_HARDNESS = 0.2
 
   useEffect(() => {
-    const dirtyImg = document.createElement("img")
-    dirtyImg.src = "/images/Lorenzo-SUJO.jpg"
-    dirtyImg.onload = () => {
-      dirtyImageRef.current = dirtyImg
-      renderFrame()
+    let loadedCount = 0
+    const onImageLoad = () => {
+      loadedCount++
+      if (loadedCount === 2) {
+        setImagesLoaded(true)
+        renderFrame()
+      }
     }
 
-    const cleanImg = document.createElement("img")
+    const dirtyImg = new Image()
+    dirtyImg.crossOrigin = "anonymous"
+    dirtyImg.src = "/images/Lorenzo-SUJO.jpg"
+    dirtyImg.onload = onImageLoad
+    dirtyImg.onerror = () => console.warn("[v0] Failed to load dirty image")
+    dirtyImageRef.current = dirtyImg
+
+    const cleanImg = new Image()
+    cleanImg.crossOrigin = "anonymous"
     cleanImg.src = "/images/Lorenzo-LIMPO.jpg"
-    cleanImg.onload = () => {
-      cleanImageRef.current = cleanImg
-      renderFrame()
-    }
+    cleanImg.onload = onImageLoad
+    cleanImg.onerror = () => console.warn("[v0] Failed to load clean image")
+    cleanImageRef.current = cleanImg
   }, [])
 
   useEffect(() => {
@@ -90,30 +90,35 @@ export function InteractiveClean() {
   const renderFrame = () => {
     const displayCanvas = displayCanvasRef.current
     const maskCanvas = maskCanvasRef.current
-    const displayCtx = displayCanvas?.getContext("2d")
+    const displayCtx = displayCanvas?.getContext("2d", { willReadFrequently: true })
 
     if (!displayCtx || !displayCanvas || !maskCanvas) return
     if (!dirtyImageRef.current || !cleanImageRef.current) return
+    if (!imagesLoaded) return
 
-    const width = displayCanvas.width
-    const height = displayCanvas.height
+    try {
+      const width = displayCanvas.width
+      const height = displayCanvas.height
 
-    displayCtx.clearRect(0, 0, width, height)
+      displayCtx.clearRect(0, 0, width, height)
 
-    const dirtyImg = dirtyImageRef.current
-    const cleanImg = cleanImageRef.current
-    const scale = Math.max(width / dirtyImg.width, height / dirtyImg.height)
-    const x = (width - dirtyImg.width * scale) / 2
-    const y = (height - dirtyImg.height * scale) / 2
+      const dirtyImg = dirtyImageRef.current
+      const cleanImg = cleanImageRef.current
+      const scale = Math.max(width / dirtyImg.width, height / dirtyImg.height)
+      const x = (width - dirtyImg.width * scale) / 2
+      const y = (height - dirtyImg.height * scale) / 2
 
-    displayCtx.save()
-    displayCtx.globalCompositeOperation = "source-over"
-    displayCtx.drawImage(maskCanvas, 0, 0)
-    displayCtx.globalCompositeOperation = "source-out"
-    displayCtx.drawImage(dirtyImg, x, y, dirtyImg.width * scale, dirtyImg.height * scale)
-    displayCtx.globalCompositeOperation = "destination-over"
-    displayCtx.drawImage(cleanImg, x, y, cleanImg.width * scale, cleanImg.height * scale)
-    displayCtx.restore()
+      displayCtx.save()
+      displayCtx.globalCompositeOperation = "source-over"
+      displayCtx.drawImage(maskCanvas, 0, 0)
+      displayCtx.globalCompositeOperation = "source-out"
+      displayCtx.drawImage(dirtyImg, x, y, dirtyImg.width * scale, dirtyImg.height * scale)
+      displayCtx.globalCompositeOperation = "destination-over"
+      displayCtx.drawImage(cleanImg, x, y, cleanImg.width * scale, cleanImg.height * scale)
+      displayCtx.restore()
+    } catch (error) {
+      console.warn("[v0] Canvas rendering error:", error)
+    }
   }
 
   const drawBrush = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
@@ -159,10 +164,18 @@ export function InteractiveClean() {
     lastMousePos.current = null
   }
 
+  if (!imagesLoaded) {
+    return (
+      <div className="relative w-full h-full bg-gray-900 rounded-xl flex items-center justify-center min-h-[500px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff5722] mx-auto mb-4" />
+          <p className="text-white/60 text-sm">Loading interactive feature...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    // Container principal que segura a sombra
-    // Nota: Quando usamos Mask Image, o 'box-shadow' normal é cortado.
-    // Temos que usar 'filter: drop-shadow' para a sombra seguir a forma do SVG.
     <div
       className="relative w-full h-full"
       style={{
@@ -173,18 +186,12 @@ export function InteractiveClean() {
         ref={containerRef}
         className="relative w-full h-full select-none touch-none group cursor-none bg-gray-900"
         style={{
-          // --- AQUI A MÁGICA ACONTECE ---
-          // O WebkitMaskImage é para Chrome/Safari/Edge
-          // O MaskImage é para Firefox/Padrão
           WebkitMaskImage: SVG_MASK,
           maskImage: SVG_MASK,
-
           WebkitMaskSize: "contain",
           maskSize: "contain",
-
           WebkitMaskRepeat: "no-repeat",
           maskRepeat: "no-repeat",
-
           WebkitMaskPosition: "center",
           maskPosition: "center",
         }}
@@ -205,11 +212,9 @@ export function InteractiveClean() {
               y: cursorPos.y - 100,
             }}
           >
-            <Image
+            <img
               src="/images/panov0.png"
               alt="Cleaning Cloth"
-              width={200}
-              height={200}
               className="w-full h-full object-contain drop-shadow-2xl rotate-12"
             />
           </motion.div>

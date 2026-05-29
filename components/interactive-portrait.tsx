@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
+import { PerformanceTimer } from "@/lib/three-utils"
 
 export default function InteractivePortrait() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -267,11 +268,11 @@ export default function InteractivePortrait() {
     bgPlane.position.z = 0.05
     helmetImage.position.z = 0.1
 
-    const clock = new THREE.Clock()
+    const timer = new PerformanceTimer()
     let t = 0
 
     const animate = () => {
-      const dt = clock.getDelta()
+      const dt = timer.getDelta()
       t += dt
       gu.time.value = t
       gu.dTime.value = dt

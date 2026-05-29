@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
+import { PerformanceTimer } from "@/lib/three-utils"
 
 export default function AnimatedTextureCanvas() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -75,10 +76,10 @@ export default function AnimatedTextureCanvas() {
     const plane = new THREE.Mesh(new THREE.PlaneGeometry(width, height), material)
     scene.add(plane)
 
-    const clock = new THREE.Clock()
+    const timer = new PerformanceTimer()
     let animationFrameId: number
     const animate = () => {
-      gu.time.value = clock.getElapsedTime()
+      gu.time.value = timer.getElapsedTime()
       renderer.render(scene, camera)
       animationFrameId = requestAnimationFrame(animate)
     }
